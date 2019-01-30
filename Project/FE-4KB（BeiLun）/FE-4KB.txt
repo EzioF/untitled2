@@ -1,0 +1,114 @@
+GW	"0x7A70x7AF"
+	
+	
+	
+	
+	
+EMS	"0x7E00x7E8"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+TCU_CVT	"0x7E10x7E9"
+	
+	
+	
+	
+	
+MMI	"0x7C10x7C9"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+IPK_ICU_VI	"0x7210x729"
+	
+	
+	
+	
+	
+IPK_ICU	"0x7E30x7EB"
+	
+	
+	
+	
+	
+EPS	"0x7D20x7DA"
+	
+	
+	
+	
+ESC	"0x7E40x7EC"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+EPB	"0x7A40x7AC"
+	
+	
+	
+	
+	
+AVM	"0x7A10x7A9"
+	
+	
+	
+	
+ACU	"0x7E50x7ED"
+	
+	
+	
+	
+	
+	
+	
+AC	"0x7C60x7CE"
+	
+	
+	
+	
+ESCL	"0x7D10x7D9"
+	
+	
+	
+	
+BCM_VI	"0x7200x728"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+BCM	"0x7E20x7EA"
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
