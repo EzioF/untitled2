@@ -6,6 +6,10 @@ from openpyxl.styles import Font, Color
 from openpyxl.styles import colors
 
 
+def Adderss_to_AS_Add(list):
+    result = hex(int(list, 16) * 0x20).upper().replace('0X', '')
+    return result
+
 def Hex_to_String(list):
     Str_Result = ''
     for byte in list:
@@ -522,6 +526,7 @@ def Analyze_Data(Data):
 def log_result(log_name):
 
 
+
     ft = Font(color=colors.RED)
     wb = load_workbook(log_name)
     wb_target = load_workbook('result.xlsx')
@@ -548,6 +553,9 @@ def log_result(log_name):
         DID_in_list='false'
         for row_num in range(1, row + 1):
             DID_in_list = 'false'
+            # DTC数据
+            DTC_Data=''
+            # DTC数据分析
             column_target = column_result
 
             DID = ws.cell(row_num, 4).value
@@ -576,6 +584,19 @@ def log_result(log_name):
                                 ws_target.cell(j + 1, search_ID).font = ft
                         else:
                             ws_target.cell(j, search_ID).value = Data
+
+
+            #                 读取DTC
+                if SID == '59':
+                    SID='New'
+                    if Data!=None:
+                        for location_Data in range(0,len(Data)+1,8):
+                            DTC_Data=DTC_Data+','+Data[location_Data:location_Data+8]
+                        ws_target.cell(j, 1).value = DTC_Data
+
+
+
+
 
             if DID_in_list=='false':
                 if SID in ['31','71','2E']:
