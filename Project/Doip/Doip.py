@@ -3,12 +3,12 @@ import os
 import test
 import openpyxl
 
-print('test1')
+# print('test1')
 from openpyxl import Workbook
 from openpyxl.styles import Font, Color
 from openpyxl.styles import colors
 #
-# ft=Font(color=colors.RED)
+ft=Font(color=colors.RED)
 #
 wb=Workbook()
 
@@ -48,10 +48,15 @@ byteNumber=0
 packetLeagth=0
 next_PacketHeader=-1
 next_Packet=-1
+log_start_time=0.0
+message_dif_time=0.0
+
 # file=open('YV1LC10D4J1388398_20181228_081404_DoIPData.pcap','rb')
 # file=open('0088111_20181205_112116_ECOS DoIP Log.pcap','rb')
 log_path=input('输入log目录=')
 file=open(log_path,'rb')
+
+
 
 for line in  file.read():
     byteNumber=byteNumber+1
@@ -85,6 +90,13 @@ for line in  file.read():
         Packet_flag = True
         # print('Packet header',header)
         Packet_length_list=header[8:12][::-1]
+        Packet_timestamp=header[0:8]
+        Packet_time_seconds=Packet_timestamp[0:4][::-1]
+        Packet_time_microseconds = Packet_timestamp[4:8][::-1]
+
+        log_start_time=test.Doip_time_stamp(Packet_time_seconds,Packet_time_microseconds)
+
+
         # print('Packetlist=',Packet_length_list)
         packetLeagth=test.Byte_length(Packet_length_list)
         # print('length=',packetLeagth)
@@ -93,10 +105,11 @@ for line in  file.read():
 
     if lineNumber==next_PacketHeader:
         # print()
-        # print('Packet Header')
+
         header_flag = True
         Packet_flag = False
         # print('Packet=',packet)
+        # print('Packet Header')
 
 
         Packet_Data=test.Doip_Packet_Data(packet)
@@ -118,8 +131,33 @@ for line in  file.read():
                 line_now=ws.max_row
                 ws.cell(line_now+1,1,Source_Address)
                 ws.cell(line_now+1, 2, Target_Address)
-                ws.cell(line_now+1, 3, UDS_Data)
+                # UDS data 12
+                ws.cell(line_now+1, 12, UDS_Data)
 
+                # UDS长度
+                ws.cell(line_now + 1, 11).value=str(int(len(UDS_Data.replace(' ',''))/2))+'Bytes'
+
+                # time
+
+                ws.cell(line_now+1,8,message_dif_time)
+                # test.Analyze_Data(UDS_Data)
+        # UDS数据解析
+                result = test.Analyze_Data(UDS_Data)
+                # result = (statu, SID, DID,SID_Type, Data_data, NRC)
+                if result[0] == 'Wrong':
+                    # sheet.cell(j, 10, result[0]).font = ft
+                    ws.cell(line_now + 1, 10, result[0]).font=ft
+                else:
+                    # sheet.cell(j, 10, result[0])
+                    ws.cell(line_now + 1, 10, result[0])
+                # sheet.cell(j, 3, result[1])
+                ws.cell(line_now + 1, 3, result[1])
+                # sheet.cell(j, 4, result[2])
+                ws.cell(line_now + 1, 4, result[2])
+                # sheet.cell(j, 5, result[3])
+                ws.cell(line_now + 1, 5, result[3])
+                # sheet.cell(j, 6, result[4])
+                ws.cell(line_now + 1, 6, result[4])
 
 
 
@@ -140,6 +178,16 @@ for line in  file.read():
         Packet_flag = True
         # print('Packet header', header)
         Packet_length_list = header[8:12][::-1]
+        # 解析时间戳
+        Packet_timestamp=header[0:8]
+        Packet_time_seconds=Packet_timestamp[0:4][::-1]
+        Packet_time_microseconds = Packet_timestamp[4:8][::-1]
+        # print('timestamp',Packet_time_seconds,Packet_time_microseconds)
+        message_real_time=test.Doip_time_stamp(Packet_time_seconds,Packet_time_microseconds)
+        message_dif_time=message_real_time-log_start_time
+
+
+
         # print('Packetlist=', Packet_length_list)
         packetLeagth = test.Byte_length(Packet_length_list)
         # print('length=', packetLeagth)
